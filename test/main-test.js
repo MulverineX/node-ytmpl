@@ -1,7 +1,7 @@
 /* global describe, it, before, after */
 const ASSERT = require('assert-diff');
 ASSERT.options.strict = true;
-const YTPL = require('../');
+const ytmpl = require('../');
 const NOCK = require('nock');
 const PATH = require('path');
 const FS = require('fs');
@@ -10,7 +10,7 @@ const YT_HOST = 'https://www.youtube.com';
 const PLAYLIST_PATH = '/playlist';
 const API_PATH = '/youtubei/v1/browse';
 
-describe('YTPL()', () => {
+describe('ytmpl()', () => {
   before(() => {
     NOCK.disableNetConnect();
   });
@@ -26,7 +26,7 @@ describe('YTPL()', () => {
       .replyWithFile(200, 'test/pages/notexistspage.html');
 
     await ASSERT.rejects(
-      YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV'),
+      ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV'),
       /API-Error: The playlist does not exist\./,
     );
     scope.done();
@@ -39,7 +39,7 @@ describe('YTPL()', () => {
       .replyWithFile(200, 'test/pages/landingPage.html');
 
     await ASSERT.rejects(
-      YTPL('UU2-i3KuYoODXsM99Z3'),
+      ytmpl('UU2-i3KuYoODXsM99Z3'),
       /Unknown Playlist/,
     );
     scope.done();
@@ -52,7 +52,7 @@ describe('YTPL()', () => {
       .replyWithFile(200, 'test/pages/privatepage.html');
 
     await ASSERT.rejects(
-      YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV'),
+      ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV'),
       /API-Error: This playlist is private\./,
     );
     scope.done();
@@ -64,7 +64,7 @@ describe('YTPL()', () => {
       .query({ gl: 'US', hl: 'en', list: 'PL0123456789ABCDEFGHIJKLMNOPQRSTUV' })
       .replyWithFile(200, 'test/pages/firstpage_01.html');
 
-    const resp = await YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { limit: 40 });
+    const resp = await ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { limit: 40 });
     ASSERT.equal(resp.items.length, 40);
     ASSERT.equal(resp.continuation, null);
     scope.done();
@@ -81,7 +81,7 @@ describe('YTPL()', () => {
       .query({ key: '<apikey>' })
       .replyWithFile(200, 'test/pages/secondpage_01.html');
 
-    const resp = await YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { limit: 110 });
+    const resp = await ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { limit: 110 });
     ASSERT.equal(resp.items.length, 110);
     ASSERT.equal(resp.continuation, null);
     scope1.done();
@@ -94,7 +94,7 @@ describe('YTPL()', () => {
       .query({ gl: 'US', hl: 'en', list: 'PL0123456789ABCDEFGHIJKLMNOPQRSTUV' })
       .replyWithFile(200, 'test/pages/firstpage_01.html');
 
-    const resp = await YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { limit: 40 });
+    const resp = await ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { limit: 40 });
     ASSERT.equal(resp.items.length, 40);
     ASSERT.equal(resp.continuation, null);
     scope.done();
@@ -107,7 +107,7 @@ describe('YTPL()', () => {
       .get(PLAYLIST_PATH)
       .query({ gl: 'US', hl: 'en', list: 'PLRBp0Fe2GpgmsW46rJyudVFlY6IYjFBIK' })
       .replyWithFile(200, `${dataDir}withDescription.html`);
-    const resp = await YTPL('PLRBp0Fe2GpgmsW46rJyudVFlY6IYjFBIK', { limit: 100 });
+    const resp = await ytmpl('PLRBp0Fe2GpgmsW46rJyudVFlY6IYjFBIK', { limit: 100 });
     ASSERT.deepEqual(resp, JSON.parse(targetData));
     scope.done();
   });
@@ -128,7 +128,7 @@ describe('YTPL()', () => {
         .replyWithFile(200, data[i].in);
       const parsed = JSON.parse(FS.readFileSync(data[i].out, 'utf8'));
 
-      const resp = await YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { limit: 40 });
+      const resp = await ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { limit: 40 });
       resp.items = resp.items.length;
       ASSERT.deepEqual(
         resp,
@@ -145,7 +145,7 @@ describe('YTPL()', () => {
       .query({ gl: 'US', hl: 'en', list: 'PL0123456789ABCDEFGHIJKLMNOPQRSTUV' })
       .replyWithFile(200, 'test/pages/firstpage_01.html');
 
-    const resp = await YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { pages: 1 });
+    const resp = await ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { pages: 1 });
     ASSERT.equal(resp.items.length, 100);
     ASSERT.equal(resp.continuation[0], '<apikey>');
     ASSERT.equal(resp.continuation[1], '<firstContinuationToken>');
@@ -164,7 +164,7 @@ describe('YTPL()', () => {
       .query({ key: '<apikey>' })
       .replyWithFile(200, 'test/pages/secondpage_01.html');
 
-    const resp = await YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { pages: 2 });
+    const resp = await ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { pages: 2 });
     ASSERT.equal(resp.items.length, 200);
     ASSERT.equal(resp.continuation[0], '<apikey>');
     ASSERT.equal(resp.continuation[1], '<secondContinuationToken>');
@@ -189,7 +189,7 @@ describe('YTPL()', () => {
       .query({ key: '<apikey>' })
       .replyWithFile(200, 'test/pages/secondpage_01.html');
 
-    const resp = await YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { pages: 3 });
+    const resp = await ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { pages: 3 });
     ASSERT.equal(resp.items.length, 300);
     scope1.done();
     scope2.done();
@@ -197,7 +197,7 @@ describe('YTPL()', () => {
   });
 });
 
-describe('YTPL.continue()', () => {
+describe('ytmpl.continue()', () => {
   before(() => {
     NOCK.disableNetConnect();
   });
@@ -208,49 +208,49 @@ describe('YTPL.continue()', () => {
 
   it('Errors if param is no array of length 4', async() => {
     await ASSERT.rejects(
-      YTPL.continueReq(null),
+      ytmpl.continueReq(null),
       /invalid continuation array/,
     );
   });
 
   it('Errors if param is not of length 4', async() => {
     await ASSERT.rejects(
-      YTPL.continueReq([1, 2, 3]),
+      ytmpl.continueReq([1, 2, 3]),
       /invalid continuation array/,
     );
   });
 
   it('Errors for invalid apiKey', async() => {
     await ASSERT.rejects(
-      YTPL.continueReq([1, null, null, null]),
+      ytmpl.continueReq([1, null, null, null]),
       /invalid apiKey/,
     );
   });
 
   it('Errors for invalid token', async() => {
     await ASSERT.rejects(
-      YTPL.continueReq(['null', 2, null, null]),
+      ytmpl.continueReq(['null', 2, null, null]),
       /invalid token/,
     );
   });
 
   it('Errors for invalid context', async() => {
     await ASSERT.rejects(
-      YTPL.continueReq(['null', 'null', 3, null]),
+      ytmpl.continueReq(['null', 'null', 3, null]),
       /invalid context/,
     );
   });
 
   it('Errors for invalid opts', async() => {
     await ASSERT.rejects(
-      YTPL.continueReq(['null', 'null', {}, 4]),
+      ytmpl.continueReq(['null', 'null', {}, 4]),
       /invalid opts/,
     );
   });
 
   it('Errors for non-paged requests', async() => {
     await ASSERT.rejects(
-      YTPL.continueReq(['null', 'null', {}, { limit: 3 }]),
+      ytmpl.continueReq(['null', 'null', {}, { limit: 3 }]),
       /continueReq only allowed for paged requests/,
     );
   });
@@ -268,7 +268,7 @@ describe('YTPL.continue()', () => {
       .query({ key: opts[0] })
       .replyWithFile(200, 'test/pages/secondpage_01.html');
 
-    const { items, continuation } = await YTPL.continueReq(opts);
+    const { items, continuation } = await ytmpl.continueReq(opts);
     ASSERT.equal(items.length, 100);
     ASSERT.ok(Array.isArray(continuation));
     ASSERT.equal(continuation[1], '<secondContinuationToken>');
@@ -288,20 +288,20 @@ describe('YTPL.continue()', () => {
       .query({ key: opts[0] })
       .replyWithFile(200, 'test/pages/secondpage_01.html');
 
-    const { items, continuation } = await YTPL.continueReq(opts);
+    const { items, continuation } = await ytmpl.continueReq(opts);
     ASSERT.equal(items.length, 100);
     ASSERT.ok(Array.isArray(continuation));
     ASSERT.equal(continuation[1], '<secondContinuationToken>');
     scope.done();
   });
 
-  it('does not crash when passing continuation from ytpl()', async() => {
+  it('does not crash when passing continuation from ytmpl()', async() => {
     const scope1 = NOCK(YT_HOST)
       .get(PLAYLIST_PATH)
       .query({ gl: 'US', hl: 'en', list: 'PL0123456789ABCDEFGHIJKLMNOPQRSTUV' })
       .replyWithFile(200, 'test/pages/firstpage_01.html');
 
-    const resp = await YTPL('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { pages: 1 });
+    const resp = await ytmpl('PL0123456789ABCDEFGHIJKLMNOPQRSTUV', { pages: 1 });
 
     const body = { context: resp.continuation[2], continuation: resp.continuation[1] };
     const scope2 = NOCK(YT_HOST, { reqheaders: resp.continuation[3].headers })
@@ -309,7 +309,7 @@ describe('YTPL.continue()', () => {
       .query({ key: resp.continuation[0] })
       .replyWithFile(200, 'test/pages/secondpage_01.html');
 
-    const { items, continuation } = await YTPL.continueReq(resp.continuation);
+    const { items, continuation } = await ytmpl.continueReq(resp.continuation);
     ASSERT.equal(items.length, 100);
     ASSERT.ok(Array.isArray(continuation));
     ASSERT.equal(continuation[1], '<secondContinuationToken>');
@@ -318,7 +318,7 @@ describe('YTPL.continue()', () => {
   });
 });
 
-describe('YTPL.getPlaylistID()', () => {
+describe('ytmpl.getPlaylistID()', () => {
   before(() => {
     NOCK.disableNetConnect();
   });
@@ -329,21 +329,21 @@ describe('YTPL.getPlaylistID()', () => {
 
   it('errors without parameter', async() => {
     await ASSERT.rejects(
-      YTPL.getPlaylistID(),
+      ytmpl.getPlaylistID(),
       /The linkOrId has to be a string/,
     );
   });
 
   it('errors when parameter is an empty string', async() => {
     await ASSERT.rejects(
-      YTPL.getPlaylistID(''),
+      ytmpl.getPlaylistID(''),
       /The linkOrId has to be a string/,
     );
   });
 
   it('errors when parameter is not a string', async() => {
     await ASSERT.rejects(
-      YTPL.getPlaylistID(1337),
+      ytmpl.getPlaylistID(1337),
       /The linkOrId has to be a string/,
     );
   });
@@ -351,7 +351,7 @@ describe('YTPL.getPlaylistID()', () => {
   it('errors for Mixes', async() => {
     const ref = 'https://www.youtube.com/watch?v=J2X5mJ3HDYE&list=RDQMN70qZKnl_M8&start_radio=1';
     await ASSERT.rejects(
-      YTPL.getPlaylistID(ref),
+      ytmpl.getPlaylistID(ref),
       /Mixes not supported/,
     );
   });
@@ -359,7 +359,7 @@ describe('YTPL.getPlaylistID()', () => {
   it('errors for video links with an embedded mix-playlist', async() => {
     const ref = 'https://www.youtube.com/watch?v=XgxMCUJwV7o&list=RDCMUCFmuxtfNr8z4q4dPlLNozzA&index=1';
     await ASSERT.rejects(
-      YTPL.getPlaylistID(ref),
+      ytmpl.getPlaylistID(ref),
       /Mixes not supported/,
     );
   });
@@ -367,7 +367,7 @@ describe('YTPL.getPlaylistID()', () => {
   it('errors for unknown list query', async() => {
     const ref = 'https://www.youtube.com/watch?v=J2X5mJ3HDYE&list=ASDF';
     await ASSERT.rejects(
-      YTPL.getPlaylistID(ref),
+      ytmpl.getPlaylistID(ref),
       /invalid or unknown list query in url/,
     );
   });
@@ -375,7 +375,7 @@ describe('YTPL.getPlaylistID()', () => {
   it('errors for half links', async() => {
     const ref = 'https://www.youtube.com/channel';
     await ASSERT.rejects(
-      YTPL.getPlaylistID(ref),
+      ytmpl.getPlaylistID(ref),
       /Unable to find a id in ./,
     );
   });
@@ -383,7 +383,7 @@ describe('YTPL.getPlaylistID()', () => {
   it('errors for 2-part links without id', async() => {
     const ref = 'https://www.youtube.com/channel/ASDF';
     await ASSERT.rejects(
-      YTPL.getPlaylistID(ref),
+      ytmpl.getPlaylistID(ref),
       /Unable to find a id in ./,
     );
   });
@@ -391,7 +391,7 @@ describe('YTPL.getPlaylistID()', () => {
   it('errors for alternative links', async() => {
     const ref = 'https://google.com/whatever';
     await ASSERT.rejects(
-      YTPL.getPlaylistID(ref),
+      ytmpl.getPlaylistID(ref),
       /not a known youtube link/,
     );
   });
@@ -399,7 +399,7 @@ describe('YTPL.getPlaylistID()', () => {
   it('errors for youtu.be links', async() => {
     const ref = 'https://youtu.be/channel/whatever';
     await ASSERT.rejects(
-      YTPL.getPlaylistID(ref),
+      ytmpl.getPlaylistID(ref),
       /not a known youtube link/,
     );
   });
@@ -407,22 +407,22 @@ describe('YTPL.getPlaylistID()', () => {
   it('instantly resolves playlists, albums and channels', async() => {
     // Channel:
     ASSERT.equal(
-      await YTPL.getPlaylistID('UCqwGaUvq_l0RKszeHhZ5leA'),
+      await ytmpl.getPlaylistID('UCqwGaUvq_l0RKszeHhZ5leA'),
       'UUqwGaUvq_l0RKszeHhZ5leA',
     );
     // Album:
     ASSERT.equal(
-      await YTPL.getPlaylistID('OLAK5uy_qwGaUvq_l0RKszeHhZ5leA12345asdf12'),
+      await ytmpl.getPlaylistID('OLAK5uy_qwGaUvq_l0RKszeHhZ5leA12345asdf12'),
       'OLAK5uy_qwGaUvq_l0RKszeHhZ5leA12345asdf12',
     );
     // Playlist:
     ASSERT.equal(
-      await YTPL.getPlaylistID('PLqwGaUvq_l0RKszeHhZ5leA'),
+      await ytmpl.getPlaylistID('PLqwGaUvq_l0RKszeHhZ5leA'),
       'PLqwGaUvq_l0RKszeHhZ5leA',
     );
     // Channel-Uploads-Playlist:
     ASSERT.equal(
-      await YTPL.getPlaylistID('UUqwGaUvq_l0RKszeHhZ5leA'),
+      await ytmpl.getPlaylistID('UUqwGaUvq_l0RKszeHhZ5leA'),
       'UUqwGaUvq_l0RKszeHhZ5leA',
     );
   });
@@ -430,7 +430,7 @@ describe('YTPL.getPlaylistID()', () => {
   it('instantly resolves music.youtube.com links', async() => {
     const url = 'https://music.youtube.com/playlist?list=PLnkLprrb5GwjsSGB8SPmS8Wny9Druyy42';
     ASSERT.equal(
-      await YTPL.getPlaylistID(url),
+      await ytmpl.getPlaylistID(url),
       'PLnkLprrb5GwjsSGB8SPmS8Wny9Druyy42',
     );
   });
@@ -441,7 +441,7 @@ describe('YTPL.getPlaylistID()', () => {
       .replyWithFile(200, 'test/pages/userPage.html');
 
     const ref = 'https://www.youtube.com/user/ASDF';
-    const uploads = await YTPL.getPlaylistID(ref);
+    const uploads = await ytmpl.getPlaylistID(ref);
     ASSERT.equal(uploads, 'UUqwGaUvq_l0RKszeHhZ5leA');
     scope.done();
   });
@@ -453,7 +453,7 @@ describe('YTPL.getPlaylistID()', () => {
 
     const ref = 'https://www.youtube.com/user/ASDF';
     await ASSERT.rejects(
-      YTPL.getPlaylistID(ref),
+      ytmpl.getPlaylistID(ref),
       /unable to resolve the ref: ./,
     );
     scope.done();
@@ -465,111 +465,111 @@ describe('YTPL.getPlaylistID()', () => {
       .replyWithFile(200, 'test/pages/userPage.html');
 
     const ref = 'https://www.youtube.com/c/ASDF';
-    const uploads = await YTPL.getPlaylistID(ref);
+    const uploads = await ytmpl.getPlaylistID(ref);
     ASSERT.equal(uploads, 'UUqwGaUvq_l0RKszeHhZ5leA');
     scope.done();
   });
 
   it('resolves channel to uploads-list', async() => {
     const ref = 'https://www.youtube.com/channel/UCqwGaUvq_l0RKszeHhZ5leA';
-    const uploads = await YTPL.getPlaylistID(ref);
+    const uploads = await ytmpl.getPlaylistID(ref);
     ASSERT.equal(uploads, 'UUqwGaUvq_l0RKszeHhZ5leA');
   });
 
   it('resolved favorites playlist', async() => {
     const ref = 'https://www.youtube.com/playlist?list=FLqwGaUvq_l0RKszeHhZ5leA';
-    const favs = await YTPL.getPlaylistID(ref);
+    const favs = await ytmpl.getPlaylistID(ref);
     ASSERT.equal(favs, 'FLqwGaUvq_l0RKszeHhZ5leA');
   });
 
   it('resolves playlist from video', async() => {
     const ref = 'https://www.youtube.com/watch?v=ASDF&list=UUqwGaUvq_l0RKszeHhZ5leA';
-    const uploads = await YTPL.getPlaylistID(ref);
+    const uploads = await ytmpl.getPlaylistID(ref);
     ASSERT.equal(uploads, 'UUqwGaUvq_l0RKszeHhZ5leA');
   });
 });
 
-describe('YTPL.validateID()', () => {
+describe('ytmpl.validateID()', () => {
   it('false without parameter', () => {
-    ASSERT.equal(YTPL.validateID(), false);
+    ASSERT.equal(ytmpl.validateID(), false);
   });
 
   it('false when parameter is an empty string', () => {
-    ASSERT.equal(YTPL.validateID(''), false);
+    ASSERT.equal(ytmpl.validateID(''), false);
   });
 
   it('false when parameter is not a string', () => {
-    ASSERT.equal(YTPL.validateID(1337), false);
+    ASSERT.equal(ytmpl.validateID(1337), false);
   });
 
   it('false for Mixes', () => {
     const ref = 'https://www.youtube.com/watch?v=J2X5mJ3HDYE&list=RDQMN70qZKnl_M8&start_radio=1';
-    ASSERT.equal(YTPL.validateID(ref), false);
+    ASSERT.equal(ytmpl.validateID(ref), false);
   });
 
   it('false for video links with an embedded mix-playlist', () => {
     const ref = 'https://www.youtube.com/watch?v=XgxMCUJwV7o&list=RDCMUCFmuxtfNr8z4q4dPlLNozzA&index=1';
-    ASSERT.equal(YTPL.validateID(ref), false);
+    ASSERT.equal(ytmpl.validateID(ref), false);
   });
 
   it('false for unknown list query', () => {
     const ref = 'https://www.youtube.com/watch?v=J2X5mJ3HDYE&list=ASDF';
-    ASSERT.equal(YTPL.validateID(ref), false);
+    ASSERT.equal(ytmpl.validateID(ref), false);
   });
 
   it('false for half links', () => {
     const ref = 'https://www.youtube.com/channel';
-    ASSERT.equal(YTPL.validateID(ref), false);
+    ASSERT.equal(ytmpl.validateID(ref), false);
   });
 
   it('false for 2-part links without id', () => {
     const ref = 'https://www.youtube.com/channel/ASDF';
-    ASSERT.equal(YTPL.validateID(ref), false);
+    ASSERT.equal(ytmpl.validateID(ref), false);
   });
 
   it('false for alternative links', () => {
     const ref = 'https://google.com/whatever';
-    ASSERT.equal(YTPL.validateID(ref), false);
+    ASSERT.equal(ytmpl.validateID(ref), false);
   });
 
   it('false for youtu.be links', () => {
     const ref = 'https://youtu.be/channel/whatever';
-    ASSERT.equal(YTPL.validateID(ref), false);
+    ASSERT.equal(ytmpl.validateID(ref), false);
   });
 
   it('true for raw playlist, album and channel ids', () => {
     // Channel:
-    ASSERT.ok(YTPL.validateID('UCqwGaUvq_l0RKszeHhZ5leA'));
+    ASSERT.ok(ytmpl.validateID('UCqwGaUvq_l0RKszeHhZ5leA'));
     // Album:
-    ASSERT.ok(YTPL.validateID('OLAK5uy_qwGaUvq_l0RKszeHhZ5leA12345asdf12'));
+    ASSERT.ok(ytmpl.validateID('OLAK5uy_qwGaUvq_l0RKszeHhZ5leA12345asdf12'));
     // Playlist:
-    ASSERT.ok(YTPL.validateID('PLqwGaUvq_l0RKszeHhZ5leA'));
+    ASSERT.ok(ytmpl.validateID('PLqwGaUvq_l0RKszeHhZ5leA'));
     // Channel-Uploads-Playlist:
-    ASSERT.ok(YTPL.validateID('UUqwGaUvq_l0RKszeHhZ5leA'));
+    ASSERT.ok(ytmpl.validateID('UUqwGaUvq_l0RKszeHhZ5leA'));
   });
 
   it('true for users', () => {
     const ref = 'https://www.youtube.com/user/ASDF';
-    ASSERT.ok(YTPL.validateID(ref));
+    ASSERT.ok(ytmpl.validateID(ref));
   });
 
   it('true for short-channels', () => {
     const ref = 'https://www.youtube.com/c/ASDF';
-    ASSERT.ok(YTPL.validateID(ref));
+    ASSERT.ok(ytmpl.validateID(ref));
   });
 
   it('true for regular channels', () => {
     const ref = 'https://www.youtube.com/channel/UCqwGaUvq_l0RKszeHhZ5leA';
-    ASSERT.ok(YTPL.validateID(ref));
+    ASSERT.ok(ytmpl.validateID(ref));
   });
 
   it('true for favorites playlist', () => {
     const ref = 'https://www.youtube.com/playlist?list=FLqwGaUvq_l0RKszeHhZ5leA';
-    ASSERT.ok(YTPL.validateID(ref));
+    ASSERT.ok(ytmpl.validateID(ref));
   });
 
   it('true for video inside playlist', () => {
     const ref = 'https://www.youtube.com/watch?v=ASDF&list=UUqwGaUvq_l0RKszeHhZ5leA';
-    ASSERT.ok(YTPL.validateID(ref));
+    ASSERT.ok(ytmpl.validateID(ref));
   });
 });

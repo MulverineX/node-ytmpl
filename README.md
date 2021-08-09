@@ -1,9 +1,9 @@
-# node-ytpl
+# node-ytmpl
 [![NPM version](https://img.shields.io/npm/v/ytmpl.svg?maxAge=3600)](https://www.npmjs.com/package/ytmpl)
 [![NPM downloads](https://img.shields.io/npm/dt/ytmpl.svg?maxAge=3600)](https://www.npmjs.com/package/ytmpl)
 
 Simple js only package to resolve YouTube Playlists.
-Does not require any login or Google-API-Key.
+Does not require a Google-API-Key.
 
 # Support
 You can contact us for support on our [chat server](https://discord.gg/V3vSCs7)
@@ -11,14 +11,14 @@ You can contact us for support on our [chat server](https://discord.gg/V3vSCs7)
 # Usage
 
 ```js
-const ytpl = require('ytpl');
+const ytmpl = require('ytmpl');
 
-const playlist = await ytpl('UU_aEa8K-EOJ3D6gOs7HcyNg');
+const playlist = await ytmpl('UU_aEa8K-EOJ3D6gOs7HcyNg');
 ```
 
 
 # API
-### ytpl(id, [options])
+### ytmpl(id, [options])
 
 Attempts to resolve the given playlist id
 
@@ -37,19 +37,19 @@ Attempts to resolve the given playlist id
     * requestOptions[Object] -> Additional parameters to passed to [miniget](https://github.com/fent/node-miniget), which is used to do the https requests
 
 * returns a Promise
-* [Example response](https://github.com/timeforaninja/node-ytpl/blob/master/example/example_output.txt)
+* [Example response](https://github.com/MulverineX/node-ytmpl/blob/master/example/example_output.txt)
 
-### ytpl.continueReq(continuationData)
+### ytmpl.continueReq(continuationData)
 Continues a previous request by pulling yet another page.  
 The previous request had to be done using `pages` limitation.
 
 #### Usage
 ```js
-const ytpl = require('ytpl');
+const ytmpl = require('ytmpl');
 
-const firstResultBatch = await ytpl('UU_aEa8K-EOJ3D6gOs7HcyNg', { pages: 1 });
-const secondResultBatch = ytpl.continueReq(firstResultBatch.continuation);
-const thirdResultBatch = ytpl.continueReq(secondResultBatch.continuation);
+const firstResultBatch = await ytmpl('UU_aEa8K-EOJ3D6gOs7HcyNg', { pages: 1 });
+const secondResultBatch = ytmpl.continueReq(firstResultBatch.continuation);
+const thirdResultBatch = ytmpl.continueReq(secondResultBatch.continuation);
 
 // You can now use the .items property of all result batches e.g.:
 console.log(firstResultBatch.items);
@@ -59,11 +59,11 @@ console.log(thirdResultBatch.items);
 
 * returns a Promise resolving into `{ continuation, items }`
 
-### ytpl.validateID(string)
+### ytmpl.validateID(string)
 
 Returns true if able to parse out a (formally) valid playlist ID.
 
-### ytpl.getPlaylistID(string)
+### ytmpl.getPlaylistID(string)
 
 Returns a playlist ID from a YouTube URL. Can be called with the playlist ID directly, in which case it just resolves.
 
@@ -78,7 +78,7 @@ Returns a playlist ID from a YouTube URL. Can be called with the playlist ID dir
 
 # Install
 
-    npm install --save ytpl
+    npm install --save ytmpl
 
 
 # License

@@ -1,5 +1,5 @@
 {
-  "name": "ytpl",
+  "name": "ytmpl",
   "version": "0.0.0-development",
   "description": "Simple package to resolve YouTube playlists - no strings attached.",
   "keywords": [
@@ -14,16 +14,16 @@
     "pagination",
     "promise"
   ],
-  "homepage": "https://github.com/TimeForANinja/node-ytpl#readme",
+  "homepage": "https://github.com/MulverineX/node-ytmpl#readme",
   "bugs": {
-    "url": "https://github.com/TimeForANinja/node-ytpl/issues"
+    "url": "https://github.com/MulverineX/node-ytmpl/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/TimeForANinja/node-ytpl.git"
+    "url": "git://github.com/MulverineX/node-ytmpl.git"
   },
   "license": "MIT",
-  "author": "Tobias Kutscha (https://github.com/TimeForANinja)",
+  "author": "Tobias Kutscha (https://github.com/MulverineX)",
   "main": "./lib/main.js",
   "types": "./typings/index.d.ts",
   "files": [

@@ -1,5 +1,5 @@
-declare module 'ytpl' {
-  namespace ytpl {
+declare module 'ytmpl' {
+  namespace ytmpl {
     interface Options {
       /** Limits the pulled items. */
       limit?: number;
@@ -92,7 +92,7 @@ declare module 'ytpl' {
    * @param [options] Object with options.
    * @returns Promise that resolves to playlist data;
    */
-  function ytpl(id: string, options?: ytpl.Options): Promise<ytpl.Result>;
+  function ytmpl(id: string, options?: ytmpl.Options): Promise<ytmpl.Result>;
 
-  export = ytpl;
+  export = ytmpl;
 }
