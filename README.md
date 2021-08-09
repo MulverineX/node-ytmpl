@@ -1,9 +1,6 @@
 # node-ytpl
-[![NPM version](https://img.shields.io/npm/v/ytpl.svg?maxAge=3600)](https://www.npmjs.com/package/ytpl)
-[![NPM downloads](https://img.shields.io/npm/dt/ytpl.svg?maxAge=3600)](https://www.npmjs.com/package/ytpl)
-[![codecov](https://codecov.io/gh/timeforaninja/node-ytpl/branch/master/graph/badge.svg)](https://codecov.io/gh/timeforaninja/node-ytpl)
-[![Known Vulnerabilities](https://snyk.io/test/github/timeforaninja/node-ytpl/badge.svg)](https://snyk.io/test/github/timeforaninja/node-ytpl)
-[![Discord](https://img.shields.io/discord/484464227067887645.svg)](https://discord.gg/V3vSCs7)
+[![NPM version](https://img.shields.io/npm/v/ytmpl.svg?maxAge=3600)](https://www.npmjs.com/package/ytmpl)
+[![NPM downloads](https://img.shields.io/npm/dt/ytmpl.svg?maxAge=3600)](https://www.npmjs.com/package/ytmpl)
 
 Simple js only package to resolve YouTube Playlists.
 Does not require any login or Google-API-Key.
