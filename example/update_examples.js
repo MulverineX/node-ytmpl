@@ -6,7 +6,7 @@ const main = async() => {
   let saveString;
 
   // Save playlist
-  const search = await ytmpl('PLRBp0Fe2GpglkzuspoGv-mu7B2ce9_0Fn', { limit: 15 });
+  const search = await ytmpl('PL3dGPfkLzu7zHzMkfQNn8UvEHj_74G8vs', { limit: Infinity });
   saveString = UTIL.inspect(search, { depth: Infinity });
   FS.writeFileSync('./example_output.txt', saveString);
 };

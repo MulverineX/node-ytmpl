@@ -23,7 +23,7 @@ const playlist = await ytmpl('UU_aEa8K-EOJ3D6gOs7HcyNg');
 Attempts to resolve the given playlist id
 
 * `id`
-    * id of the yt-playlist
+    * id of the ytm-playlist
     * or a playlist url
     * or a user url (resolves to uploaded playlist)
     * or a channel url (resolves to uploaded playlist)
