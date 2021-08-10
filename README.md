@@ -2,7 +2,7 @@
 [![NPM version](https://img.shields.io/npm/v/ytmpl.svg?maxAge=3600)](https://www.npmjs.com/package/ytmpl)
 [![NPM downloads](https://img.shields.io/npm/dt/ytmpl.svg?maxAge=3600)](https://www.npmjs.com/package/ytmpl)
 
-Simple js only package to resolve YouTube Playlists.
+Simple js only package to resolve YouTube Music Playlists.
 Does not require a Google-API-Key.
 
 # Support
