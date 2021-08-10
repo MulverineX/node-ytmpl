@@ -43,6 +43,7 @@
     "test:coverage": "npm run-script nyc:coverage && codecov"
   },
   "dependencies": {
+    "clipboardy": "^2.3.0",
     "miniget": "^4.2.1"
   },
   "devDependencies": {
